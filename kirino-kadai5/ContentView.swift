@@ -8,14 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var leftText: String = ""
+    @State private var rightText: String = ""
+    @State private var calculationResults: Int = 0
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        HStack {
+            VStack {
+                HStack {
+                    TextField("", text: $leftText)
+                    Text("÷")
+                    TextField("", text: $rightText)
+                }
+                .padding(.leading)
+                Button {
+                    print("ボタンタップ")
+                } label: {
+                    HStack {
+                        Text("計算")
+                    }
+
+                }
+                HStack {
+                    Text("\(calculationResults)")
+                    Spacer()
+                }
+                .padding()
+                Spacer()
+            }
+            .frame(width: 250)
+            .textFieldStyle(.roundedBorder)
+            Spacer()
         }
-        .padding()
     }
 }
 
