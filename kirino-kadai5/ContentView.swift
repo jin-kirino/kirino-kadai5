@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var rightText: String = ""
     @State private var calculationResults: Double = 0.0
     @State private var isShowingAlert: Bool = false
+    @State private var alertMessage: String = ""
 
     var body: some View {
         HStack {
@@ -30,7 +31,8 @@ struct ContentView: View {
                     }
                 }
                 HStack {
-                    Text("\(floor(calculationResults * 100000) / 100000)")
+                    //                    Text("\(floor(calculationResults * 100000) / 100000)")
+                    Text("\(calculationResults)")
                     Spacer()
                 }
                 .padding()
@@ -42,6 +44,8 @@ struct ContentView: View {
         }
         .alert("課題５", isPresented: $isShowingAlert) {
             Button("OK") { }
+        } message: {
+            Text("\(alertMessage)")
         }
         .onAppear {
             calculationResults = 0.0
@@ -49,14 +53,21 @@ struct ContentView: View {
     }
 
     private func didTapAction(leftText: String, rightText: String) {
-        guard let numberOfStraws = Double(leftText), let numberOfDivisors = Double(rightText) else {
+        guard let numberOfStraws = Double(leftText) else {
             isShowingAlert = true
+            alertMessage = "割られる数を入力してください"
             return
         }
-        if numberOfDivisors != 0 {
-            calculationResults = numberOfStraws / numberOfDivisors
-        } else {
+        guard let numberOfDivisors = Double(rightText) else {
             isShowingAlert = true
+            alertMessage = "割る数を入力してください"
+            return
+        }
+        if numberOfDivisors == 0 {
+            isShowingAlert = true
+            alertMessage = "割る数には0を入力しないでください"
+        } else {
+            calculationResults = numberOfStraws / numberOfDivisors
         }
     }
 }
