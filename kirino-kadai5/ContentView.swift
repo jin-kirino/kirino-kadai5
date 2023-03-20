@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var leftText: String = ""
     @State private var rightText: String = ""
-    @State private var calculationResults: Double = 0.0
+    @State private var calculationResults: Double = 0.5
     @State private var isShowingAlert: Bool = false
     @State private var alertMessage: String = ""
 
@@ -25,14 +25,14 @@ struct ContentView: View {
                 .padding(.leading)
                 Button {
                     didTapAction(leftText: leftText, rightText: rightText)
+                    print("計算結果\(calculationResults)")
                 } label: {
                     HStack {
                         Text("計算")
                     }
                 }
                 HStack {
-                    //                    Text("\(floor(calculationResults * 100000) / 100000)")
-                    Text("\(calculationResults)")
+                    Text(calculationResults.rounded(.towardZero) == calculationResults ? String(format: "%.1f", calculationResults) : String(format: "%.5f", calculationResults))
                     Spacer()
                 }
                 .padding()
@@ -42,13 +42,13 @@ struct ContentView: View {
             .textFieldStyle(.roundedBorder)
             Spacer()
         }
+        .onAppear {
+            calculationResults = floor(calculationResults * 10) / 10
+        }
         .alert("課題５", isPresented: $isShowingAlert) {
             Button("OK") { }
         } message: {
             Text("\(alertMessage)")
-        }
-        .onAppear {
-            calculationResults = 0.0
         }
     }
 
