@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var leftText: String = ""
     @State private var rightText: String = ""
-    @State private var calculationResults: Double = 0.5
+    @State private var calculationResults: String = "0.5"
     @State private var isShowingAlert: Bool = false
     @State private var alertMessage: String = ""
 
@@ -32,7 +32,7 @@ struct ContentView: View {
                     }
                 }
                 HStack {
-                    Text(calculationResults.rounded(.towardZero) == calculationResults ? String(format: "%.1f", calculationResults) : String(format: "%.5f", calculationResults))
+                    Text(calculationResults)
                     Spacer()
                 }
                 .padding()
@@ -41,9 +41,6 @@ struct ContentView: View {
             .frame(width: 250)
             .textFieldStyle(.roundedBorder)
             Spacer()
-        }
-        .onAppear {
-            calculationResults = floor(calculationResults * 10) / 10
         }
         .alert("課題５", isPresented: $isShowingAlert) {
             Button("OK") { }
@@ -67,7 +64,13 @@ struct ContentView: View {
             isShowingAlert = true
             alertMessage = "割る数には0を入力しないでください"
         } else {
-            calculationResults = numberOfStraws / numberOfDivisors
+            // 表示桁数の制限は NumberFormatter で行う
+            let formatter = NumberFormatter()
+            // 10進数に設定
+            formatter.numberStyle = .decimal
+            formatter.minimumIntegerDigits = 1
+            formatter.maximumFractionDigits = 5
+            calculationResults = formatter.string(from: NSNumber(value: numberOfStraws / numberOfDivisors)) ?? ""
         }
     }
 }
